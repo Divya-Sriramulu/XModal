@@ -27,23 +27,12 @@ export default function XModal() {
       }
     }
 
-    if (!username) {
-      alert("Please enter username.");
-      return;
-    }
-    if (!email) {
-      alert("Please enter email.");
-      return;
-    }
-    if (!phone) {
-      alert("Please enter phone number.");
-      return;
-    }
-    if (!dob) {
-      alert("Please enter date of birth.");
+    if (!username || !email || !phone || !dob) {
+      alert("All fields are required.");
       return;
     }
 
+    alert("Form Submitted!");
     setOpen(false);
     setUsername("");
     setEmail("");
@@ -56,11 +45,11 @@ export default function XModal() {
       {!open && <button onClick={() => setOpen(true)}>Open Form</button>}
 
       {open && (
-        <div className="modal" onClick={() => setOpen(false)}>
-          <div
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="modal">
+          {/* ✅ FULL SCREEN OVERLAY */}
+          <div className="overlay" onClick={() => setOpen(false)}></div>
+
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <form onSubmit={(e) => e.preventDefault()}>
               <h2>Form</h2>
 
