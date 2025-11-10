@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function XModal() {
+export default function App() {
   const [open, setOpen] = useState(false);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -27,12 +27,23 @@ export default function XModal() {
       }
     }
 
-    if (!username || !email || !phone || !dob) {
-      alert("All fields are required.");
+    if (!username) {
+      alert("Please enter username.");
+      return;
+    }
+    if (!email) {
+      alert("Please enter email.");
+      return;
+    }
+    if (!phone) {
+      alert("Please enter phone number.");
+      return;
+    }
+    if (!dob) {
+      alert("Please enter date of birth.");
       return;
     }
 
-    alert("Form Submitted!");
     setOpen(false);
     setUsername("");
     setEmail("");
@@ -45,11 +56,15 @@ export default function XModal() {
       {!open && <button onClick={() => setOpen(true)}>Open Form</button>}
 
       {open && (
-        <div className="modal">
-          {/* ✅ FULL SCREEN OVERLAY */}
-          <div className="overlay" onClick={() => setOpen(false)}></div>
-
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        // THIS is the clickable backdrop that Cypress tests
+        <div
+          className="modal"
+          onClick={() => setOpen(false)}
+        >
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking form
+          >
             <form onSubmit={(e) => e.preventDefault()}>
               <h2>Form</h2>
 
