@@ -9,6 +9,27 @@ export default function App() {
   const modalRef = useRef(null);
 
   const handleSubmit = () => {
+    // Priority checks for Cypress tests:
+    if (email && !email.includes("@")) {
+      alert("Invalid email. Please check your email address.");
+      return;
+    }
+
+    if (phone && (phone.length !== 10 || isNaN(phone))) {
+      alert("Invalid phone number. Please enter a 10-digit phone number.");
+      return;
+    }
+
+    if (dob) {
+      const today = new Date();
+      const entered = new Date(dob);
+      if (entered > today) {
+        alert("Invalid date of birth. Date cannot be in the future.");
+        return;
+      }
+    }
+
+    // Required blank-field checks
     if (!username) {
       alert("Please enter username.");
       return;
@@ -17,16 +38,8 @@ export default function App() {
       alert("Please enter email.");
       return;
     }
-    if (!email.includes("@")) {
-      alert("Invalid email. Please check your email address.");
-      return;
-    }
     if (!phone) {
       alert("Please enter phone number.");
-      return;
-    }
-    if (phone.length !== 10 || isNaN(phone)) {
-      alert("Invalid phone number. Please enter a 10-digit phone number.");
       return;
     }
     if (!dob) {
@@ -34,25 +47,15 @@ export default function App() {
       return;
     }
 
-    const today = new Date();
-    const enteredDate = new Date(dob);
-
-    if (enteredDate > today) {
-      alert("Invalid date of birth. Date cannot be in the future.");
-      return;
-    }
-
-    // success -> close modal
+    // Success → close modal & clear form
     setOpen(false);
-
-    // Clear form
     setUsername("");
     setEmail("");
     setPhone("");
     setDob("");
   };
 
-  // Close modal if clicked outside
+  // Close modal if click outside modal-content
   const handleOutsideClick = (e) => {
     if (modalRef.current && !modalRef.current.contains(e.target)) {
       setOpen(false);
@@ -69,53 +72,58 @@ export default function App() {
   }, [open]);
 
   return (
-    <div className="modal">
-      {!open && (
-        <button onClick={() => setOpen(true)}>Open Form</button>
-      )}
+    <div>
+      {!open && <button onClick={() => setOpen(true)}>Open Form</button>}
 
       {open && (
         <div className="modal">
           <div className="modal-content" ref={modalRef}>
-            <h2>Form</h2>
-            <input
-              id="username"
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <br />
+            <form onSubmit={(e) => e.preventDefault()}>
+              <h2>Form</h2>
 
-            <input
-              id="email"
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <br />
+              <input
+                id="username"
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <br />
 
-            <input
-              id="phone"
-              type="text"
-              placeholder="Phone Number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
-            <br />
+              <input
+                id="email"
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <br />
 
-            <input
-              id="dob"
-              type="date"
-              value={dob}
-              onChange={(e) => setDob(e.target.value)}
-            />
-            <br />
+              <input
+                id="phone"
+                type="text"
+                placeholder="Phone Number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+              <br />
 
-            <button className="submit-button" onClick={handleSubmit}>
-              Submit
-            </button>
+              <input
+                id="dob"
+                type="date"
+                value={dob}
+                onChange={(e) => setDob(e.target.value)}
+              />
+              <br />
+
+              <button
+                type="submit"
+                className="submit-button"
+                onClick={handleSubmit}
+              >
+                Submit
+              </button>
+            </form>
           </div>
         </div>
       )}
