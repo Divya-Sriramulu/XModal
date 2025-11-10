@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function App() {
+export default function XModal() {
   const [open, setOpen] = useState(false);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -8,7 +8,25 @@ export default function App() {
   const [dob, setDob] = useState("");
 
   const handleSubmit = () => {
-    // ✅ Check empty fields first
+    if (email && !email.includes("@")) {
+      alert("Invalid email. Please check your email address.");
+      return;
+    }
+
+    if (phone && (phone.length !== 10 || isNaN(phone))) {
+      alert("Invalid phone number. Please enter a 10-digit phone number.");
+      return;
+    }
+
+    if (dob) {
+      const today = new Date();
+      const entered = new Date(dob);
+      if (entered > today) {
+        alert("Invalid date of birth. Date cannot be in the future.");
+        return;
+      }
+    }
+
     if (!username) {
       alert("Please enter username.");
       return;
@@ -26,27 +44,6 @@ export default function App() {
       return;
     }
 
-    // ✅ Validate email format
-    if (!email.includes("@")) {
-      alert("Invalid email. Please check your email address.");
-      return;
-    }
-
-    // ✅ Validate phone format
-    if (phone.length !== 10 || isNaN(phone)) {
-      alert("Invalid phone number. Please enter a 10-digit phone number.");
-      return;
-    }
-
-    // ✅ Validate DOB (future date)
-    const today = new Date();
-    const entered = new Date(dob);
-    if (entered > today) {
-      alert("Invalid date of birth. Date cannot be in the future.");
-      return;
-    }
-
-    // ✅ All good → close and reset form
     setOpen(false);
     setUsername("");
     setEmail("");
