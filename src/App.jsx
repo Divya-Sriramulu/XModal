@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 
 export default function App() {
   const [open, setOpen] = useState(false);
@@ -6,10 +6,8 @@ export default function App() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [dob, setDob] = useState("");
-  const modalRef = useRef(null);
 
   const handleSubmit = () => {
-    // Priority checks for Cypress tests:
     if (email && !email.includes("@")) {
       alert("Invalid email. Please check your email address.");
       return;
@@ -29,7 +27,6 @@ export default function App() {
       }
     }
 
-    // Required blank-field checks
     if (!username) {
       alert("Please enter username.");
       return;
@@ -47,7 +44,6 @@ export default function App() {
       return;
     }
 
-    // Success → close modal & clear form
     setOpen(false);
     setUsername("");
     setEmail("");
@@ -55,29 +51,16 @@ export default function App() {
     setDob("");
   };
 
-  // Close modal if click outside modal-content
-  const handleOutsideClick = (e) => {
-    if (modalRef.current && !modalRef.current.contains(e.target)) {
-      setOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    if (open) {
-      document.addEventListener("mousedown", handleOutsideClick);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, [open]);
-
   return (
     <div>
       {!open && <button onClick={() => setOpen(true)}>Open Form</button>}
 
       {open && (
-        <div className="modal">
-          <div className="modal-content" ref={modalRef}>
+        <div className="modal" onClick={() => setOpen(false)}>
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
             <form onSubmit={(e) => e.preventDefault()}>
               <h2>Form</h2>
 
